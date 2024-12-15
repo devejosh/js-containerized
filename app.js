@@ -4,7 +4,7 @@ const port  = 3000
 
 // routes
 app.get ('/' , (req, res) =>{
-    res.send("Welcome to express inside a container")
+    res.send("Welcome to express inside a container. updated text")
 })
 
 app.listen (port, () => {
