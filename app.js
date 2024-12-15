@@ -1,3 +1,12 @@
-// Welcome to node. We willl containerize this app. 
+const express = require ('express')
+const app = express ()
+const port  = 3000
 
-console.log("Welcome to node, on a container")
+// routes
+app.get ('/' , (req, res) =>{
+    res.send("Welcome to express inside a container")
+})
+
+app.listen (port, () => {
+    console.log (`Server is up on port : ${port}`)
+})

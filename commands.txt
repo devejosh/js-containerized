@@ -1,0 +1,46 @@
+
+docker run --name node -p 3000:3000 -v $(pwd):/app -v /app/node_modules node-img
+
+Explanation of Each Part:
+
+    docker run:
+        This is the command used to run a Docker container from an image.
+
+    --name node:
+        This option gives the container a custom name, in this case, node.
+        By default, Docker assigns a random name to containers, but this option allows you to specify a meaningful name for easier identification and management.
+
+    -p 3000:3000:
+        This is a port mapping option. It maps port 3000 on your host machine to port 3000 inside the container.
+        For example, if your Node.js app listens on port 3000 inside the container, this option will allow you to access it on port 3000 on your machine (i.e., http://localhost:3000).
+
+    -v $(pwd):/app:
+        This is a volume mount option.
+        $(pwd) (a command that returns the current directory on your host machine) is mapped to /app inside the container. This means the content of your local directory (where you're running the command) will be available inside the container at /app.
+        This allows you to work on your files locally (on your host machine), and the changes will be reflected inside the container immediately (a common setup for development).
+
+    -v /app/node_modules:
+        This is another volume mount option. It mounts the /app/node_modules directory in the container to a named volume. In this case, it is not mounting a local directory but instead using Docker's internal volume management.
+        The purpose of this mount is to keep the node_modules directory isolated from the volume mount (-v $(pwd):/app). Without this option, when you mount your local files (via -v $(pwd):/app), the local node_modules folder might overwrite the node_modules folder in the container, which could cause missing modules or discrepancies in installed packages.
+        By using -v /app/node_modules, you create a persistent volume for node_modules, so it isn't overwritten by the local files, and any installed dependencies stay in the container's volume, allowing the container to persist them across runs.
+
+    node-img:
+        This is the name of the Docker image you're running. The container will be started from the node-img image. Make sure you have previously built the image or pulled it from a registry like Docker Hub.
+
+Why This Works:
+
+    Volume Mounting: By mounting your local directory ($(pwd)) into the container at /app, you allow live code changes. This is useful when you're developing and want changes to reflect inside the container immediately.
+
+    Persistent node_modules Volume: The second volume (-v /app/node_modules) ensures that the node_modules directory inside the container persists across container restarts and isn't overwritten by the mounted local code. Without this, mounting the entire project directory could cause the container to lose its node_modules, as they might be replaced by your local node_modules directory (which might not have been installed yet).
+
+Example Workflow:
+
+    You start the container using docker run.
+    The current directory on your host machine (where you're running the docker run command) is mounted to /app inside the container. Any changes to files on your host will be reflected in the container immediately.
+    The node_modules directory inside the container is mounted to a persistent Docker volume, ensuring that dependencies installed in the container don't get overwritten by your local node_modules directory.
+    The application runs inside the container, and any code you modify locally will be reflected inside the container because of the volume mount.
+
+Key Points:
+
+    Volume Mounting (-v) allows live syncing between the host and container.
+    The use of named volume for node_modules ensures dependencies are kept inside the container, even when you mount the source code.

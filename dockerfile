@@ -2,7 +2,11 @@ FROM node:23
 
 WORKDIR /app
 
-COPY . ./
+RUN npm init -y && npm install express@4.21.2
 
-CMD ["node" , "app.js"]
+COPY . /app
+
+EXPOSE 3000
+
+CMD ["node", "app.js"]
 
