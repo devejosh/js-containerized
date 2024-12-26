@@ -1,12 +1,11 @@
-FROM node:23
+FROM node:23-bookworm-slim
 
 WORKDIR /app
 
-RUN npm init -y && npm install express@4.21.2
+# npm init -y && npm install express@4.21.2
 
 COPY . /app
 
 EXPOSE 3000
 
-CMD ["node", "app.js"]
-
+CMD ["bash"]
